@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("LockDemo")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+b4ff921a16c4d26fcc462941fc2c4eaec47c01c7")]
 [assembly: System.Reflection.AssemblyProductAttribute("LockDemo")]
 [assembly: System.Reflection.AssemblyTitleAttribute("LockDemo")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

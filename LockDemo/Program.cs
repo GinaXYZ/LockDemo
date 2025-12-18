@@ -2,9 +2,15 @@
 {
     internal class Program
     {
+
+        //Konstanten
         private const int AnzahlThreads = 10;
         private const int AnzahlIterationen = 10_000;
 
+        //Lock-Objekt
+        private static readonly object _lockObjekt = new object();
+
+        //Zähler-Variablen
         private static int _zeahlerOhneLock = 0;
         private static int _zaehlerMitLock = 0;
         private static int _zeahlerMitInterlocked = 0;
@@ -24,24 +30,71 @@
             {
                 tasksOhneLock[i] = Task.Run(InkrementOhneLock);
             }
+
             Task.WaitAll(tasksOhneLock);
+
             TimeSpan dauerOhneLock = DateTime.Now - startzeitOhneLock;
+
             int differenzOhneLock = erwarteterEndwert - _zeahlerOhneLock;
+
             Console.WriteLine($"Ohne Lock:");
-            Console.WriteLine($"    Ergebnis: {_zeahlerOhneLock:N0}");
-            Console.WriteLine($"    Erwartet: {erwarteterEndwert:N0}");
+            Console.WriteLine($"    Ergebnis: {_zeahlerOhneLock}");
+            Console.WriteLine($"    Erwartet: {erwarteterEndwert}");
             Console.WriteLine($"    Status: {(differenzOhneLock == 0 ? "Korrekt" : differenzOhneLock + " verloren")} ");
             Console.WriteLine($"    Dauer: {dauerOhneLock.TotalMilliseconds:F2} ms");
             Console.WriteLine();
-        }
 
-        private static void InkrementOhneLock()
-        {
-            for (int i = 0; i < AnzahlIterationen; i++)
+            //Mit Lock
+            DateTime startzeitMitLock = DateTime.Now;
+
+            Task[] tasksMitLock = new Task[AnzahlThreads];
+
+            for (int i = 0; i < AnzahlThreads; i++)
             {
-                _zeahlerOhneLock++;
+                tasksMitLock[i] = Task.Run(InkrementMitLock);
             }
 
+            Task.WaitAll(tasksMitLock);
+
+            TimeSpan dauerMitLock = DateTime.Now - startzeitMitLock;
+
+            int differenzMitLock = erwarteterEndwert - _zaehlerMitLock;
+
+            Console.WriteLine($"Mit Lock:");
+            Console.WriteLine($"    Ergebnis: {_zaehlerMitLock}");
+            Console.WriteLine($"    Erwartet: {_zaehlerMitLock}");
+            Console.WriteLine($"    Status: {(differenzMitLock == 0 ? "Korrekt" : differenzMitLock + " verloren")} ");
+            Console.WriteLine($"    Dauer: {dauerMitLock.TotalMilliseconds:F2} ms");
+            Console.WriteLine();
+
+            static void InkrementOhneLock()
+            {
+                for (int i = 0; i < AnzahlIterationen; i++)
+                {
+                    _zeahlerOhneLock++;
+                }
+
+            }
+            static void InkrementMitLock()
+            {
+                for (int i = 0; i < AnzahlIterationen; i++)
+                {
+                    lock (_lockObjekt)
+                    {
+                        _zaehlerMitLock++;
+                    }
+                }
+
+            }
+            /*
+            static void InkrementMitInterlocked()
+            {
+                for (int i = 0; i < AnzahlIterationen; i++)
+                {
+                    System.Threading.Interlocked.Increment(ref _zeahlerMitInterlocked);
+                }
+            }
+            */
         }
     }
 }

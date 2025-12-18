@@ -12,3 +12,4 @@ C:\Users\FIA\source\repos\LockDemo\LockDemo\obj\Debug\net8.0\refint\LockDemo.dll
 C:\Users\FIA\source\repos\LockDemo\LockDemo\obj\Debug\net8.0\LockDemo.pdb
 C:\Users\FIA\source\repos\LockDemo\LockDemo\obj\Debug\net8.0\LockDemo.genruntimeconfig.cache
 C:\Users\FIA\source\repos\LockDemo\LockDemo\obj\Debug\net8.0\ref\LockDemo.dll
+C:\Users\FIA\source\repos\LockDemo\LockDemo\obj\Debug\net8.0\LockDemo.sourcelink.json
