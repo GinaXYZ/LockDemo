@@ -3,14 +3,14 @@
     internal class Program
     {
 
-        //Konstanten
+        // Konstanten
         private const int AnzahlThreads = 10;
         private const int AnzahlIterationen = 10_000;
 
-        //Lock-Objekt
+        // Lock-Objekt
         private static readonly object _lockObjekt = new object();
 
-        //Zähler-Variablen
+        // Zähler-Variablen
         private static int _zeahlerOhneLock = 0;
         private static int _zaehlerMitLock = 0;
         private static int _zeahlerMitInterlocked = 0;
@@ -44,7 +44,8 @@
             Console.WriteLine($"    Dauer: {dauerOhneLock.TotalMilliseconds:F2} ms");
             Console.WriteLine();
 
-            //Mit Lock
+            // Mit Lock
+
             DateTime startzeitMitLock = DateTime.Now;
 
             Task[] tasksMitLock = new Task[AnzahlThreads];
@@ -67,6 +68,32 @@
             Console.WriteLine($"    Dauer: {dauerMitLock.TotalMilliseconds:F2} ms");
             Console.WriteLine();
 
+
+            // Mit Interlocked
+
+            DateTime startzeitMitInterlocked = DateTime.Now;
+
+            Task[] tasksMitInterlocked = new Task[AnzahlThreads];
+
+            for (int i = 0; i < AnzahlThreads; i++)
+            {
+                tasksMitInterlocked[i] = Task.Run(InkrementMitInterlocked);
+            }
+
+            Task.WaitAll(tasksMitInterlocked);
+
+            TimeSpan dauerMitInterlocked = DateTime.Now - startzeitMitInterlocked;
+
+            int differenzMitInterlocked = erwarteterEndwert - _zeahlerMitInterlocked;
+
+            Console.WriteLine($"Mit Interlocked:");
+            Console.WriteLine($"    Ergebnis: {_zeahlerMitInterlocked}");
+            Console.WriteLine($"    Erwartet: {erwarteterEndwert}");
+            Console.WriteLine($"    Status: {(differenzMitInterlocked == 0 ? "Korrekt" : differenzMitInterlocked + " verloren")} ");
+            Console.WriteLine($"    Dauer: {dauerMitInterlocked.TotalMilliseconds:F2} ms");
+            Console.WriteLine();
+
+
             static void InkrementOhneLock()
             {
                 for (int i = 0; i < AnzahlIterationen; i++)
@@ -86,15 +113,15 @@
                 }
 
             }
-            /*
+            
             static void InkrementMitInterlocked()
             {
                 for (int i = 0; i < AnzahlIterationen; i++)
                 {
-                    System.Threading.Interlocked.Increment(ref _zeahlerMitInterlocked);
+                    Interlocked.Increment(ref _zeahlerMitInterlocked);
                 }
             }
-            */
+            
         }
     }
 }
